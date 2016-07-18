@@ -10,7 +10,7 @@ SD_TeamBlueCount = 0; //Amount of team blue players
 SD_InQue = 0; //Amount of players in que
 SD_Ready = 0; //Amount of players ready to start
 SD_MaxQue = 5; //Max que for each side
-SD_MatchQue = 1; //Amount of players needed on each side to start the match.
+SD_MatchQue = 10; //Amount of players needed on each side to start the match.
 SD_Admins = [];
 SD_MatchStarted = false;
 SD_BomBTime_M = 2; //Bomb timer minutes
@@ -27,7 +27,7 @@ SD_WinningBonus = 1500; //Winnings
 SD_LosingBonus = 900; //losing
 SD_TeamBlueAlive = 0; //Count the Team red for alive.
 SD_TeamRedAlive = 0; //Count the Team red for alive.
-SD_TeamWinningScore = 3;
+SD_TeamWinningScore = 10;
 
 publicVariable "SD_TeamRed";
 publicVariable "SD_TeamBlue";
