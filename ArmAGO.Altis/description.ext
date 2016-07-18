@@ -1,0 +1,29 @@
+joinUnassigned = 1;
+
+respawn = "Instant";
+respawnDelay = 0;
+respawnDialog = 0;
+respawnButton = 0;
+
+disabledAI = true;
+disableChannels[]={0,1,2};
+enableDebugConsole = 1;
+
+class Header {
+	gameType = "SC";
+	minPlayers = 1;
+	maxPlayers = 12;
+};
+
+author = "Lifeman";
+OnLoadName = "ArmA GO v0.1 by Lifeman";
+
+#include "Dialogs\SD_Defines.hpp"
+#include "Dialogs\SD_BuyMenu.hpp"
+#include "Dialogs\SD_Que.hpp"
+
+
+class RscTitles
+{
+	#include "Dialogs\SD_Hud.hpp"
+};
