@@ -175,6 +175,9 @@ Match functions
 			AGO_roundLive = true;
 			publicVariable "AGO_roundLive";
 
+			AGO_BombPlanted = false;
+			publicVariable "AGO_BombPlanted";
+
 			[] call AGO_Match_CheckAlivePlayers;
 
 			_oldScore_T = AGO_score_T;
@@ -208,6 +211,9 @@ Match functions
 
 			AGO_roundsPlayed = AGO_roundsPlayed + 1;
 			publicVariable "AGO_roundsPlayed";
+
+			AGO_BombPlanted = false;
+			publicVariable "AGO_BombPlanted";
 
 			sleep 15;
 
