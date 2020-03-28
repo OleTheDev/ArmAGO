@@ -14,8 +14,8 @@ Actions
 		bomb_a addAction["Plant Bomb",{["A"] call AGO_Bomb_Plant;}];
 		bomb_b addAction["Plant Bomb",{["B"] call AGO_Bomb_Plant;}];
 	} else {
-		bomb_a addAction["Defuse Bomb",{hint "TEST DEFUSE A";}];
-		bomb_b addAction["Defuse Bomb",{hint "TEST DEFUSE B";}];
+		bomb_a addAction["Defuse Bomb",{["A"] call AGO_Bomb_Defuse;}];
+		bomb_b addAction["Defuse Bomb",{["B"] call AGO_Bomb_Defuse;}];
 	};
 	
 }] call AGO_Function;

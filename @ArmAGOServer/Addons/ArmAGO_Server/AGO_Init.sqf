@@ -33,7 +33,9 @@ AGO_Server_init = {
 		["", "AGO_Network"],
 		["", "AGO_Bomb"],
 		["", "AGO_Actions"],
-		["", "AGO_Match"]
+		["", "AGO_Match"],
+		["", "AGO_Respawn"],
+		["", "AGO_ServerLoops"]
 	];
 
 	_folder = "";

@@ -18,7 +18,7 @@ Bomb
 		if (AGO_warmupMode) exitWith {
 			["You may not plant the bomb while in warmup mode!",AGO_Red] call AGO_MessageSystem;
 		};
-		if (player getVariable "AGO_isdead") exitWith {};
+		if (player getVariable "AGO_isDead") exitWith {};
 		_bombSite = cursorObject;
 		if (player distance cursorObject > 5) exitWith {
 			["You must get closer!",AGO_Red] call AGO_MessageSystem;
@@ -26,17 +26,28 @@ Bomb
 
 		["AinvPknlMstpSnonWnonDnon_medic_1","playmove"] call AGO_SwitchAnim_Global;
 
-		for "_i" from 0 to 3 do {
+		AGO_ActionCancel = false;
+		AGO_cancelAction = player addAction["Cancel Plant",{
+			AGO_ActionCancel = true;
+			player removeAction AGO_cancelAction;
+			systemChat "Action canceled!";
+		}];
+
+		for "_i" from 0 to 6 do {
 			["AinvPknlMstpSnonWnonDnon_medic_1","playmove"] call AGO_SwitchAnim_Global;
-			sleep 1.5;
+			sleep 0.8;
 			waitUntil{animationState player != "AinvPknlMstpSnonWnonDnon_medic_1"};
-			if (player getVariable "AGO_isdead") exitWith {};
+			if (AGO_ActionCancel) exitWith {};
+			if (player getVariable "AGO_isDead") exitWith {};
 			if (player distance cursorObject > 5) exitWith {};
 		};
 
+		if (AGO_ActionCancel) exitWith {};
+		player removeAction AGO_cancelAction;
+
 		sleep (random 3);
 
-		if (player getVariable "AGO_isdead") exitWith {};	
+		if (player getVariable "AGO_isDead") exitWith {};	
 		if (AGO_BombPlanted) exitWith {
 			["The bomb is already planted!",AGO_Red] call AGO_MessageSystem;
 		};
@@ -44,10 +55,75 @@ Bomb
 		AGO_BombPlanted = true;
 		publicVariable "AGO_BombPlanted";
 
+		AGO_BombSitePlanted = _site;
+		publicVariable "AGO_BombSitePlanted";
+
 		[350] call AGO_Match_addCash;
 		["You recived $350 for planting the bomb!",AGO_Green] call AGO_MessageSystem;
 		[_site] remoteExec["AGO_Bomb_Plant_ServerLoop",2];
 		[format["Bomb has been planted on %1 site!",_site],AGO_Yellow] remoteExec ["AGO_MessageSystem"];
+	};
+	
+}] call AGO_Function;
+
+["AGO_Bomb_Defuse",{
+	[_this select 0] spawn {
+		params["_site"];
+		if (player getVariable "AGO_playerSide" != "CT") exitWith {
+			["Your not a ccounter-terrorit!",AGO_Red] call AGO_MessageSystem;
+		};
+		if (!AGO_BombPlanted) exitWith {
+			["The bomb is not planted!",AGO_Red] call AGO_MessageSystem;
+		};
+		if (AGO_BombDefused) exitWith {
+			["The bomb is already defused!",AGO_Red] call AGO_MessageSystem;
+		};
+		if (AGO_warmupMode) exitWith {
+			["You may not defuse the bomb while in warmup mode!",AGO_Red] call AGO_MessageSystem;
+		};
+		if (_site != AGO_BombSitePlanted) exitWith {
+			["The bomb is planted on the other site!",AGO_Red] call AGO_MessageSystem;
+		};
+		if (player getVariable "AGO_isDead") exitWith {};
+		_bombSite = cursorObject;
+		if (player distance cursorObject > 5) exitWith {
+			["You must get closer!",AGO_Red] call AGO_MessageSystem;
+		};
+
+		["AinvPknlMstpSnonWnonDnon_medic_1","playmove"] call AGO_SwitchAnim_Global;
+
+		AGO_ActionCancel = false;
+		AGO_cancelAction = player addAction["Cancel Defuse",{
+			AGO_ActionCancel = true;
+			player removeAction AGO_cancelAction;
+			systemChat "Action canceled!";
+		}];
+
+		for "_i" from 0 to 6 do {
+			["AinvPknlMstpSnonWnonDnon_medic_1","playmove"] call AGO_SwitchAnim_Global;
+			sleep 0.8;
+			waitUntil{animationState player != "AinvPknlMstpSnonWnonDnon_medic_1"};
+			if (AGO_ActionCancel) exitWith {};
+			if (player getVariable "AGO_isDead") exitWith {};
+			if (player distance cursorObject > 5) exitWith {};
+		};
+
+		if (AGO_ActionCancel) exitWith {};
+		player removeAction AGO_cancelAction;
+
+		sleep (random 3);
+
+		if (player getVariable "AGO_isDead") exitWith {};	
+		if (AGO_BombDefused) exitWith {
+			["The bomb has already been defused!",AGO_Red] call AGO_MessageSystem;
+		};
+
+		AGO_BombDefused = true;
+		publicVariable "AGO_BombDefused";
+
+		[400] call AGO_Match_addCash;
+		["You recived $400 for defusing the bomb!",AGO_Green] call AGO_MessageSystem;
+		[format["The bomb has been defused by %1!",name player],AGO_Yellow] remoteExec ["AGO_MessageSystem"];
 	};
 	
 }] call AGO_Function;
@@ -59,6 +135,9 @@ Bomb
 		_seconds = 59;
 		_bombTime = AGO_BombTime;
 		[format["%1 minutes and %2 seconds left until bomb goes off!",_bombTime,_seconds],AGO_Yellow] remoteExec ["AGO_MessageSystem"];
+
+		AGO_BombDefused = false;
+		publicVariable "AGO_BombDefused";
 
 		while {AGO_BombPlanted} do {
 			if (_seconds <= 0 && _bombTime >= 1) then {

@@ -20,7 +20,7 @@ Players can signup
 		};
 		if (_x getVariable "AGO_playerSide" == "CT") then {
 			_readyStatus = [_x] call AGO_Signup_getReadyStatus;
-			lbAdd[1500,format["%1 (%2)",name _x,_readyStatus]];
+			lbAdd[1501,format["%1 (%2)",name _x,_readyStatus]];
 		};
 	} forEach playableUnits;
 

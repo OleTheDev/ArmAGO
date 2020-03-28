@@ -6,6 +6,10 @@ Script File: AGO_ServerVars.sqf
 Description:
 Server Variables
 */
+
+AGO_BombSitePlanted = "";
+publicVariable "AGO_BombSitePlanted";
+
 AGO_BombPlanted = false;
 publicVariable "AGO_BombPlanted";
 

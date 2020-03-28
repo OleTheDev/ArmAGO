@@ -8,16 +8,43 @@ Match functions
 */
 
 ["AGO_Match_GetplayerReady",{
-	private["_onlinePlayers","_readyPlayers"];
-	_onlinePlayers = count playableUnits;
-	_readyPlayers = 0;
+	private _CTPlayers = 0;
+	private _TPlayers = 0;
+	private _readyCTPlayers = 0;
+	private _readyTPlayers = 0;
+	private _return = false;
+
 	{
-		if (_x getVariable "AGO_isReady" && _x getVariable "AGO_playerSide" != "") then {
-			_readyPlayers = _readyPlayers + 1;
+		if (_x getVariable "AGO_playerSide" == "CT") then {
+			_CTPlayers = _CTPlayers + 1;
+		};
+		if (_x getVariable "AGO_playerSide" == "T") then {
+			_TPlayers = _TPlayers + 1;
+		};
+	} foreach playableUnits;
+	{
+		if (_x getVariable "AGO_isReady" && _x getVariable "AGO_playerSide" == "T") then {
+			_readyTPlayers = _readyTPlayers + 1;
+		};
+		if (_x getVariable "AGO_isReady" && _x getVariable "AGO_playerSide" == "CT") then {
+			_readyCTPlayers = _readyCTPlayers + 1;
 		};
 	} foreach playableUnits;
 
-	_readyPlayers;
+	_ctSideRdy = false;
+	_tSideRdy = false;
+
+	if (_CTPlayers isEqualTo _readyCTPlayers && _CTPlayers >= 1) then {
+		_ctSideRdy = true;
+	};
+	if (_TPlayers isEqualTo _readyTPlayers && _TPlayers >= 1) then {
+		_tSideRdy = true;
+	};
+	if (_ctSideRdy && _tSideRdy) then {
+		_return = true;
+	};
+
+	_return;
 }] call AGO_Function;
 
 ["AGO_Match_addCash",{
@@ -76,7 +103,7 @@ Match functions
 
 			sleep 1;
 		};
-	};
+	}; 
 }] call AGO_Function;
 
 ["AGO_Match_ServerLoop",{
@@ -85,7 +112,8 @@ Match functions
 		AGO_warmupMode = true;
 		publicVariable "AGO_warmupMode";
 
-		waitUntil{call AGO_Match_GetplayerReady >= 1};
+		[] remoteExec ["AGO_PlayerSetup_StartingGear"];
+		waitUntil{call AGO_Match_GetplayerReady};
 		["Match starting in 30 seconds!",AGO_Green] remoteExec["AGO_MessageSystem"];
 		sleep 20;
 		["Match starting in 10 seconds!",AGO_Green] remoteExec["AGO_MessageSystem"];
@@ -106,6 +134,33 @@ Match functions
 
 			AGO_roundLive = false;
 			publicVariable "AGO_roundLive";
+
+			{
+				_x setVariable["AGO_isDead",false,true];
+			} foreach playableUnits;
+
+			{
+				deleteVehicle _x;
+			} foreach allDead;
+
+			private _cleanUp = 0;
+
+			{
+				_damage = getDammage _x;
+				if (typeOf _x == "GroundWeaponHolder") then {
+					deleteVehicle _x;
+					_cleanUp = _cleanUp + 1;
+				};
+
+				if ((_damage > 0.8) && !(_x isKindOf "Man") && !(_x isKindOf "Car") && !(_x isKindOf "Air") && !(_x isKindOf "Ship")) then {
+					_x setDamage 0;
+					_cleanUp = _cleanUp + 1;
+				};
+			} forEach nearestObjects [getMarkerPos "t_spawn_1", [], 1000];
+
+			if (_cleanUp >= 1) then {
+				[format["::SERVER CLEANER:: Cleaned up %1 object(s)!",_cleanUp]] remoteExec ["systemChat"];
+			};
 
 			_timer = 20;
 			for "_i" from 1 to 20 do {
@@ -154,7 +209,7 @@ Match functions
 			AGO_roundsPlayed = AGO_roundsPlayed + 1;
 			publicVariable "AGO_roundsPlayed";
 
-			sleep 5;
+			sleep 15;
 
 			if (AGO_roundsPlayed isEqualTo AGO_maxRounds || AGO_score_T isEqualTo 16 || AGO_score_CT isEqualTo 16) exitWith {
 				[] remoteExec["AGO_Match_Finished"];
@@ -200,7 +255,8 @@ Match functions
 			};
 		};
 
-		waitUntil{AGO_matchLive};
+		sleep 2;
+
 		[] call AGO_Match_ServerLoop;
 	};
 }] call AGO_Function;
@@ -239,6 +295,9 @@ Match functions
 		if (player getVariable "AGO_playerSide" isEqualTo "") exitWith {};
 
 		_side = player getVariable "AGO_playerSide";
+		player enableSimulation true;
+		player allowDamage true;
+		player setDamage 0;
 		if (_side isEqualTo "T") then {
 			_tSpawns = [];
 			_amount = 1;
