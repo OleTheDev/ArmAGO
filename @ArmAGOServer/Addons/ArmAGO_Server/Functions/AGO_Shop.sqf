@@ -30,6 +30,8 @@ Shop
 		["You must be closer to the spawn!",AGO_Red] call AGO_MessageSystem;
 	};
 
+	systemChat format ["Current Cash: $%1",AGO_Cash];
+
 	createDialog "AGO_ShopDialog";
 
 	{
@@ -83,8 +85,6 @@ Shop
 	if (_classname isEqualTo "") exitWith {
 		["That item was not found in our config!",AGO_Red] call AGO_MessageSystem;
 	};
-
-	closeDialog 1;
 	
 	{
 		if (_classname == _x select 0) exitWith {

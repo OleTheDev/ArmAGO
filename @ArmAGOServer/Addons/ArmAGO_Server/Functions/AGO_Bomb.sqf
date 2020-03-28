@@ -108,7 +108,9 @@ Bomb
 			if (player distance cursorObject > 5) exitWith {};
 		};
 
-		if (AGO_ActionCancel) exitWith {};
+		if (AGO_ActionCancel) exitWith {
+			player removeAction AGO_cancelAction;
+		};
 		player removeAction AGO_cancelAction;
 
 		sleep (random 3);
