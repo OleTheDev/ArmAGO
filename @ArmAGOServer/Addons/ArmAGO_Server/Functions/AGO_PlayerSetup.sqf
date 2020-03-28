@@ -24,6 +24,8 @@ Player Setup
 			[_msg,AGO_Green] call AGO_MessageSystem;
 			sleep 5;
 		} forEach _array;
+
+		[] spawn AGO_PlayerSetup_3rdPerson;
 	};
 }] call AGO_Function;
 
@@ -45,4 +47,11 @@ Player Setup
 			call compile format["player %1 '%2';",_cmd,_classname];
 		};
 	} foreach AGO_startingoutfit;
+}] call AGO_Function;
+
+["AGO_PlayerSetup_3rdPerson",{
+	while {true} do {
+		waitUntil {cameraView == "EXTERNAL" || cameraView == "GROUP"};
+		player switchCamera "INTERNAL";
+	};
 }] call AGO_Function;
