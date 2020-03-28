@@ -162,6 +162,8 @@ Match functions
 				[format["::SERVER CLEANER:: Cleaned up %1 object(s)!",_cleanUp]] remoteExec ["systemChat"];
 			};
 
+			[format["Current Score: CT %1 - T %2",AGO_score_CT,AGO_score_T],AGO_Yellow] remoteExec ["AGO_MessageSystem"];	
+
 			_timer = 20;
 			for "_i" from 1 to 20 do {
 				[format["Round starting in: \n%1 second(s)\nPress B to open shop menu!",_timer]] remoteExec ["hintSilent"];
