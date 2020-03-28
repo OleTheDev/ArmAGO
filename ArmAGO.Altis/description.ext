@@ -5,25 +5,28 @@ respawnDelay = 0;
 respawnDialog = 0;
 respawnButton = 0;
 
+wreckLimit = 3;
+wreckRemovalMinTime = 60;
+wreckRemovalMaxTime = 320;
+corpseLimit = 150;
+corpseRemovalMinTime = 999;
+corpseRemovalMaxTime = 9999;
+
 disabledAI = true;
-disableChannels[]={0,1,2};
+disableChannels[]={0,2};
 enableDebugConsole = 1;
 
+author = "Nais";
+OnLoadName = "ArmA GO v0.1";
+onLoadMission = "Counter-Strike mod.";
+loadScreen = "";
+
 class Header {
-	gameType = "SC";
+	gameType = "Deathmatch";
 	minPlayers = 1;
-	maxPlayers = 12;
+	maxPlayers = 60;
 };
 
-author = "Lifeman";
-OnLoadName = "ArmA GO v0.1 by Lifeman";
-
-#include "Dialogs\SD_Defines.hpp"
-#include "Dialogs\SD_BuyMenu.hpp"
-#include "Dialogs\SD_Que.hpp"
-
-
-class RscTitles
-{
-	#include "Dialogs\SD_Hud.hpp"
-};
+#include "Dialogs\AGO_Defines.hpp"
+#include "Dialogs\AGO_ShopDialog.hpp"
+#include "Dialogs\AGO_SignupDialog.hpp"

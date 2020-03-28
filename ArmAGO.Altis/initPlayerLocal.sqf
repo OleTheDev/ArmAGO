@@ -1,35 +1,27 @@
 /*
-Script File Another: Lifeman
-Script File Mod: RP Project
+Script File Another: Nais
+Script File Mod: ArmA GO
 Script File: InitPlayerLocal.sqf
 
 Description:
 Starting the client
 */
 
-player allowDamage false;
+systemChat "Loading client side 0%...";
 player enableSimulation false;
-
-systemChat "::Server INIT:: Loading Client INIT 20%...";
-
 waitUntil {!(isNull (findDisplay 46))};
-
-systemChat "::Server INIT:: Loading Client INIT 50%...";
-
+systemChat "Loading client side 20%...";
 waitUntil{!isNull player};
-
-systemChat "::Server INIT:: Loading Client INIT 70%...";
-
+systemChat "Loading client side 40%...";
 waitUntil{player == player};
-
-systemChat "::Server INIT:: Loading Client INIT 80%...";
-
+systemChat "Loading client side 50%...";
 waitUntil{time > 0.1};
-
-systemChat "::Server INIT:: Loading Client INIT 90%...";
-
+systemChat "Loading client side 70%...";
 waitUntil {!(isNull player)};
+systemChat "Loading client side 90%...";
 
-[] call SD_Spawn_Client;
+systemChat "Loading client side 100%";
 
-systemChat "::Server INIT:: Loading Client INIT 100%.";
+[] call AGO_PlayerSetup_Start;
+
+systemChat format ["Client %1 loaded.",name player];
